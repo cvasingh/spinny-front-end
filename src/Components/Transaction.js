@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import axios from 'axios';
 import Loader from './Loader';
 import Table from './Table';
+import Bill from './Bill';
 // set columns 
 const COLUMNS = [
     {
@@ -18,11 +19,28 @@ const COLUMNS = [
     },
     {
         Header: "Issued Date",
-        accessor: (item) => item.issuedDate
+        accessor: (item) => {
+            const d = new Date(item.issuedDate)
+            return ((d.getDate() < 10 ? '0' + d.getDate() : d.getDate())
+                + "-" + (d.getDate() < 10 ? '0' + d.getDate() : d.getDate())
+                + "-" + d.getFullYear()
+            )
+        }
     },
     {
         Header: "Returned Date",
-        accessor: (item) => item.returnedDate || "Not Returned Yet"
+        accessor: (item) => {
+            if (item.returnedDate) {
+            const d = new Date(item.returnedDate)
+            return ((d.getDate() < 10 ? '0' + d.getDate() : d.getDate())
+                + "-" + (d.getDate() < 10 ? '0' + d.getDate() : d.getDate())
+                + "-" + d.getFullYear()
+            )
+        }else{
+            return "Not Return Yet"
+        }
+        }
+
     }
 ]
 
@@ -40,6 +58,7 @@ export default function Transactions({ apiLink }) {
     const [data, setData] = useState([])
     const [result, setResult] = useState("")
     const [loading, setLoading] = useState(false)
+    const [showBill, setShowBill] = useState(false)
     // festch device data from csf_device table 
     useEffect(() => {
         setLoading(true)
@@ -72,13 +91,17 @@ export default function Transactions({ apiLink }) {
                 // handle success
                 console.log(res.data);
                 setResult(res.data)
-                alert(res.data.Rs)
                 setLoading(false)
             })
             .catch((err) => console.log(err))
+            .then(() => {
+                setShowBill(true)
+                setTimeout(() => setShowBill(false), 5000)
+            })
         e.preventDefault();
     }
     return <>
+        {showBill && <Bill result={result} />}
         <div className='row align-items-center justify-content-center m-0 mt-3'>
             <div className='col-md-5 cfs-box'>
                 <div className='h4 text-cfs-primary'>Books Issu</div>

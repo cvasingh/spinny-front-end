@@ -1,9 +1,11 @@
 import React, { useState } from 'react'
 import axios from 'axios';
 import Loader from './Loader';
+import ShowCode from './ShowCode';
 
 export default function Other({ apiLink }) {
     const [loading, setLoading] = useState(false)
+    const [showCode, setShowCode] = useState(false)
 
     const [bookNameToPerson, setBookNameToPerson] = useState("")
     const [bookNameToRent, setBookNameToRent] = useState("")
@@ -22,6 +24,7 @@ export default function Other({ apiLink }) {
                 // handle success
                 setData(res.data)
                 setLoading(false)
+                setShowCode(true)
             })
             .catch((err) => console.log(err))
         e.preventDefault();
@@ -33,8 +36,10 @@ export default function Other({ apiLink }) {
         axios.post(`${apiLink}/otherAPI/bookNameToRent`, { bookName: bookNameToRent })
             .then((res) => {
                 // handle success
+                console.log(res.data);
                 setData(res.data)
                 setLoading(false)
+                setShowCode(true)
             })
             .catch((err) => console.log(err))
         e.preventDefault();
@@ -48,6 +53,7 @@ export default function Other({ apiLink }) {
                 // handle success
                 setData(res.data)
                 setLoading(false)
+                setShowCode(true)
             })
             .catch((err) => console.log(err))
         e.preventDefault();
@@ -61,11 +67,16 @@ export default function Other({ apiLink }) {
                 // handle success
                 setData(res.data)
                 setLoading(false)
+                setShowCode(true)
             })
             .catch((err) => console.log(err))
         e.preventDefault();
     }
     return <>
+        {loading ?
+            <Loader /> :
+            showCode && <ShowCode data={data} setShowCode={setShowCode}/>
+        }
         <div className='row align-items-center justify-content-center m-0 mt-3'>
             <div className='col-sm-5 cfs-box'>
                 <div className='h6 text-cfs-primary'>List of People</div>
@@ -129,15 +140,6 @@ export default function Other({ apiLink }) {
                         <button className='btn btn-cfs-primary' type="submit">Search</button>
                     </div>
                 </form>
-            </div>
-        </div>
-        <div className='row align-items-center justify-content-center m-0'>
-            <div className='col-md-10'>
-                <div className='cfs-box'>
-                    {loading ?
-                        <Loader /> :
-                        JSON.stringify(data)}
-                </div>
             </div>
         </div>
     </>
