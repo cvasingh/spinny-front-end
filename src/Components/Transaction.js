@@ -22,7 +22,7 @@ const COLUMNS = [
         accessor: (item) => {
             const d = new Date(item.issuedDate)
             return ((d.getDate() < 10 ? '0' + d.getDate() : d.getDate())
-                + "-" + (d.getDate() < 10 ? '0' + d.getDate() : d.getDate())
+                + "-" + (d.getMonth() < 10 ? '0' + d.getMonth() : d.getMonth())
                 + "-" + d.getFullYear()
             )
         }
@@ -33,7 +33,7 @@ const COLUMNS = [
             if (item.returnedDate) {
             const d = new Date(item.returnedDate)
             return ((d.getDate() < 10 ? '0' + d.getDate() : d.getDate())
-                + "-" + (d.getDate() < 10 ? '0' + d.getDate() : d.getDate())
+                + "-" + (d.getMonth() < 10 ? '0' + d.getMonth() : d.getMonth())
                 + "-" + d.getFullYear()
             )
         }else{
